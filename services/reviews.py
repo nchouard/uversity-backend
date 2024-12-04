@@ -24,6 +24,22 @@ def create_review(review_args):
     return review.to_dict()
 
 
+def update_review(review_args):
+    review = Review.objects.get(eb_id=review_args['id'])
+    review.comment = review_args['comment']
+    review.environment_rating = review_args['environment_rating']
+    review.organization_rating = review_args['organization_rating']
+    review.clarity_rating = review_args['clarity_rating']
+    review.expertise_rating = review_args['expertise_rating']
+    review.aggregate_rating = calculate_aggregate(review.clarity_rating,
+                                                  review.environment_rating,
+                                                  review.expertise_rating,
+                                                  review.organization_rating)
+    review.save()
+    return review.to_dict()
+
+
+
 #   Delete Review
 def delete_review(review_args):
     review = Review.objects.get(review_args['id'])

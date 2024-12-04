@@ -15,9 +15,16 @@ post_parser.add_argument('expertise_rating', type=int)
 
 
 class Review(Resource):
-    def put(self):
-        #   This method should be used in the case of updating reviews.
-        pass
+    def get(self, resource_id):
+        review = ReviewModel.objects(id__exists=resource_id)[0]
+        review = review.to_dict()
+        return {'review': review}
+
+    def put(self, review_args):
+        args = post_parser.parse_args()
+        review_args = args
+        review = reviews.update_review(review_args)
+        review.save()
 
     @jwt_required
     def post(self):
